@@ -1,0 +1,36 @@
+spring:
+    jpa:
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.MySQL8Dialect
+                format_sql: "true"
+        show-sql: "true"
+    datasource:
+        password: root
+        username: root
+        url: jdbc:mysql://localhost:3306/omf
+        dbcp2:
+            driver-class-name: com.mysql.cj.jdbc.Driver
+    application:
+        name: GATEWAY-SERVICE
+    cloud:
+        gateway:
+            routes:
+                - id: search-service
+                  uri: lb://SEARCH-SERVICE
+                  predicates:
+                      - Path=/search/**
+                  filters:
+                      - AuthenticationFilter
+                - id: order-service
+                  uri: lb://ORDER-SERVICE
+                  predicates:
+                      - Path=/order/**
+                  filters:
+                      - AuthenticationFilter
+server:
+    port: "9000"
+jwt:
+    secret: testing
+    validity: 20
+    authDisabled: true
