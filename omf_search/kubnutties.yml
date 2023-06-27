@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: search-service-app
+  labels:
+    app: search-service-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app : search-service-app
+  template:
+    metadata:
+      labels:
+        app: search-service-app
+    spec:
+      containers:
+      - name: search-service-app
+        image: 30052001/search_service
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 9090
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name:  search-service-svc
+spec:
+  selector:
+    app:  search-service-app
+  ports:
+  - port:  80
+    targetPort:  9090
